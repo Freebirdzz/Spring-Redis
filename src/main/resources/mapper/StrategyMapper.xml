@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shangxuefeng.cachetest.business.dao.StrategyDao">
+
+    <select id="getStrategyById" parameterType="Integer" resultType="com.shangxuefeng.cachetest.business.bean.Strategy">
+        SELECT
+        <include refid="BaseColumnLists"/>
+        FROM strategy
+        WHERE id = #{id}
+    </select>
+
+
+    <select id="getStrategyListByPreAction" parameterType="String" resultType="com.shangxuefeng.cachetest.business.bean.Strategy">
+        SELECT
+        <include refid="BaseColumnLists"/>
+        FROM strategy
+        WHERE pre_action = #{preAction}
+    </select>
+
+    <sql id="BaseColumnLists">
+        id, name, pre_action as preAction, status, ctime, utime
+    </sql>
+
+
+</mapper>

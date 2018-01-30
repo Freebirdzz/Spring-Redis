@@ -1,19 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 
-
-<bean id="jedisConnFactory"
+    <!-- 基础版使用配置开始
+    <bean id="jedisConnFactory"
           class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
-          p:hostName="localhost"
-          p:port="6379"
+          p:hostName="${redis.host}"
+          p:port="${redis.port}"
     />
-
-    <!-- redis template definition -->
     <bean id="redisTemplate"
           class="org.springframework.data.redis.core.RedisTemplate"
           p:connectionFactory-ref="jedisConnFactory"/>
+    基础班使用配置结束-->
+
+    <!-- redis 相关配置 -->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:hostName="${redis.host}"
+          p:port="${redis.port}"/>
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+    </bean>
+
+    <!-- 启用缓存注解功能，这个是必须的，否则注解不会生效，另外，该注解一定要声明在spring主配置文件中才会生效 -->
+    <cache:annotation-driven cache-manager="cacheManager" />
+    <!--spring自己的缓存管理器，这里定义了缓存位置名称 ，即注解中的value-->
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <!--这里可以配置多个redis-->
+                 <bean class="com.shangxuefeng.cachetest.commons.RedisCache">
+                     <property name="redisTemplate" ref="redisTemplate" />
+                     <property name="name" value="default"/>
+                </bean>
+                <bean class="com.shangxuefeng.cachetest.commons.RedisCache">
+                    <property name="redisTemplate" ref="redisTemplate" />
+                    <property name="name" value="redisCache"/>
+                    <!--redisCache名称要在类或方法的注解中使用-->
+                </bean>
+            </set>
+        </property>
+    </bean>
 
 </beans>

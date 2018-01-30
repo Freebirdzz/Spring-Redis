@@ -4,9 +4,11 @@ import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Setter
 @Getter
-public class Strategy {
+public class Strategy implements Serializable{
     private Integer id;
     private String name;
     private String preAction;

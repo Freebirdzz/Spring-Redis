@@ -2,7 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 
     <!-- 对包中的所有类进行扫描，以完成Bean创建和自动依赖注入的功能 -->
@@ -12,6 +13,16 @@
     </context:component-scan>
 
     <context:component-scan base-package="com.shangxuefeng.cachetest.business.**"></context:component-scan>
+
+
+
+    <context:property-placeholder location="classpath:property/*.properties" />
+    <!--
+        为啥不能这样写呢?
+        <context:property-placeholder location="classpath:property/mysql.properties" />
+        <context:property-placeholder location="classpath:property/redis.properties" />
+        因为这个context会在Spring初始化的时候作为一个bean进行创建，而这个创建是单例形式的！所以一定会有一个创建失败，就会导致找不到某些属性
+    -->
 
     <import resource="application-mybatis.xml"/>
     <import resource="application-redis.xml"/>

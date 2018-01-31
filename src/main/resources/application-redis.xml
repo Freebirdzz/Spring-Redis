@@ -19,7 +19,8 @@
     <!-- redis 相关配置 -->
     <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
           p:hostName="${redis.host}"
-          p:port="${redis.port}"/>
+          p:port="${redis.port}"
+    />
 
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
         <property name="connectionFactory" ref="jedisConnectionFactory" />

@@ -35,7 +35,7 @@ public class StrategyServiceImpl implements StrategyService {
      * @return
      */
     @Override
-    @Cacheable(value="redisCache")
+    @Cacheable(cacheNames="redisCache")
     public Strategy getThroughCacheById(int id) {
         System.out.println("要从数据库中查找[id=" + id + "]");
         Strategy stg = strategyDao.getStrategyById(id);

@@ -52,19 +52,27 @@ public class RedisCache implements Cache {
         return this.redisTemplate;
     }
 
+    /**
+     * 这个get方法，通过反序列化的形式，获取redis中存储的value值
+     * @param key
+     * @return
+     */
     @Override
     public ValueWrapper get(Object key) {
         System.out.println("从RedisCache中获取[" + key  + "]对应的value");
         final Integer keyI = (Integer)key;
-        Strategy object = null;
+
+        /**
+         *    对应下面的set方法
+         *    object = redisTemplate.opsForValue().get(key);
+         */
+
+        Object object = null;
         object = redisTemplate.execute(new RedisCallback<Strategy>() {
             @Override
             public Strategy doInRedis(RedisConnection redisConnection) throws DataAccessException {
-                byte [] keyB = intToByte4(keyI);
-                byte [] valueB = redisConnection.get(keyB);
-                if (valueB != null){
-                    redisConnection.set(keyB, valueB);
-                }
+                byte [] valueB = redisConnection.get(keyI.toString().getBytes());
+
                 return valueB == null ? null : toObject(valueB);
             }
         });
@@ -89,6 +97,17 @@ public class RedisCache implements Cache {
         System.out.println("Redis Cache调用put方法[key=" + key + ", value = " + value);
         final String keyf = key.toString();
         final Object valuef = value;
+
+        /**
+         * redisTemplate.opsForValue().set((Integer)key, (Strategy)value);
+         * 注意，上面这种set方式，有两个操作：
+         * 1、对key进行序列化，得到结果keyTmp
+         * 2、将这个keyTmp存入redis中去。
+         *
+         * 所以，如果想通过redis-cli来访问设置的key，需要用keyTmp来查找！
+         */
+
+        /*可以写成下面的lambda的写法
         redisTemplate.execute(new RedisCallback<Long>() {
             @Override
             public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
@@ -99,6 +118,17 @@ public class RedisCache implements Cache {
                 return 1L;
             }
         });
+        */
+        redisTemplate.execute((RedisCallback<Long>) redisConnection -> {
+            byte [] keyb = keyf.getBytes();
+            byte [] valueb = toByteArray(valuef);
+            redisConnection.set(keyb, valueb);
+            redisConnection.expire(keyb, LIVE_TIME);
+            return 1L;
+        });
+
+
+
     }
 
     @Override
@@ -119,20 +149,6 @@ public class RedisCache implements Cache {
     }
 
 
-    /**
-     * int整数转换为4字节的byte数组
-     *
-     * @param i  整数
-     * @return byte数组
-     */
-    public static byte[] intToByte4(int i) {
-        byte[] targets = new byte[4];
-        targets[3] = (byte) (i & 0xFF);
-        targets[2] = (byte) (i >> 8 & 0xFF);
-        targets[1] = (byte) (i >> 16 & 0xFF);
-        targets[0] = (byte) (i >> 24 & 0xFF);
-        return targets;
-    }
 
     /**
      * 反序列化过程
@@ -168,8 +184,12 @@ public class RedisCache implements Cache {
             /**
              * 这个writeObject方法要注意，这个方法开始的时候会报一个错误：
              * java.io.NotSerializableException: com.shangxuefeng.cachetest.business.bean.Strategy
-             * debug了一下，大致是在write的过程中会判断"obj instanceof Serializable"，如果不成立就抛出了异常
-             * 所以解决的时候，对于Strategy这个类，继承了Serializable接口，暂时解决了这个问题
+             * debug了一下，writeObject的过程大致是：
+             * 1、生成一个描述被序列化对象的类的类元信息的ObjectStreamClass对象。
+             * 2、根据传入的需要序列化的对象的实际类型进行不同的序列化操作。
+             *      2.1、从代码里面可以很明显的看到，对于String类型、数组类型和Enum可以直接进行序列化。
+             *      2.2、如果被序列化对象实现了Serializable对象，则会调用writeOrdinaryObject()方法进行序列化。
+             *      2.3、以上两个都不符合，抛出NotSerializableException异常
              */
             oos.writeObject(obj);
             oos.flush();
@@ -182,5 +202,10 @@ public class RedisCache implements Cache {
         return bytes;
     }
 
+
+    public static void main(String [] args){
+        int a = 1024;
+        byte [] one = String.valueOf(a).getBytes();
+    }
 
 }

@@ -44,7 +44,10 @@ public class StrategyServiceTest {
     public void testSpringRedisTemplate(){
         // -----------------String类型数据操作 start--------------------
         ValueOperations<String, String> stringOperations = redisTemplate.opsForValue();
-        // String类型数据存储，不设置过期时间，永久性保存
+        stringOperations.set("1", "Today is a good day");
+
+        System.out.println(stringOperations.get("1"));
+/*        // String类型数据存储，不设置过期时间，永久性保存
         stringOperations.set("string1", "草拟吗。。。。");
         // String类型数据存储，设置过期时间为80秒，采用TimeUnit控制时间单位
         stringOperations.set("string2", "Today is a fantastic day!!!", 80, TimeUnit.SECONDS);
@@ -57,7 +60,7 @@ public class StrategyServiceTest {
         System.out.println(value2);
 
         String name = stringOperations.get("name");
-        System.out.println(name);
+        System.out.println(name);*/
     }
 
 

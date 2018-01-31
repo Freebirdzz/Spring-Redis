@@ -6,6 +6,10 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
+/**
+ * 实现Serializable接口，为了序列化！！Serializable接口本身是一个空接口，没有内容
+ * Serializable接口这是一个标识，告诉程序所有实现了”我”的对象都需要进行序列化
+ */
 @Setter
 @Getter
 public class Strategy implements Serializable{

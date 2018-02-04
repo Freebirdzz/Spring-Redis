@@ -3,6 +3,7 @@ package com.shangxuefeng.cachetest.business.service.impl;
 import com.shangxuefeng.cachetest.business.dao.StrategyDao;
 import com.shangxuefeng.cachetest.business.service.StrategyService;
 import com.shangxuefeng.cachetest.business.bean.Strategy;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -42,4 +43,18 @@ public class StrategyServiceImpl implements StrategyService {
         return stg;
     }
 
+
+
+    /**
+     * 更新strategy信息，要点是需要清空缓存，防止访问到脏数据
+     * @param strategy 更新strategy
+     * @return
+     */
+    @Override
+    @CacheEvict(value = "redisCache", key = "#strategy.id")
+    public int updateStrategy(Strategy strategy){
+        int ret = strategyDao.updateStrategy(strategy);
+        System.out.println("更新了数据库中[" + strategy + "]的信息,ret=" + ret);
+        return ret;
+    }
 }

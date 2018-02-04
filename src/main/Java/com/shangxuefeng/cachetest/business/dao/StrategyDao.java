@@ -11,4 +11,6 @@ public interface StrategyDao {
 
     List<Strategy> getStrategyListByPreAction(String preAction);
 
+    int updateStrategy(Strategy strategy);
+
 }

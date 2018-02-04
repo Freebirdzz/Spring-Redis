@@ -18,10 +18,12 @@ import java.util.concurrent.Callable;
  * 2、配置相关的信息
  * 3、利用使用的实际缓存，实现Cache的方法
  *
+ *
+ *  注意！Cache不支持key为null的情况！！！！如果需要支持，使用AbstractValueAdaptingCache抽象类
  */
 public class RedisCache implements Cache {
     //缓存的生存期
-    public static final long LIVE_TIME = 86400;
+    public static final long LIVE_TIME = 5;
     /**
      * 这里我们使用的是Redis，为了方便，用Spring提供的RedisTemplate来操作Redis
      * 在这个例子中，用Redis来缓存Strategy的id和Strategy对象
@@ -59,7 +61,7 @@ public class RedisCache implements Cache {
      */
     @Override
     public ValueWrapper get(Object key) {
-        System.out.println("从RedisCache中获取[" + key  + "]对应的value");
+        System.out.println("从RedisCache中获取[id=" + key  + "]对应的value");
         final Integer keyI = (Integer)key;
 
         /**
@@ -94,7 +96,7 @@ public class RedisCache implements Cache {
 
     @Override
     public void put(Object key, Object value) {
-        System.out.println("Redis Cache调用put方法[key=" + key + ", value = " + value);
+        System.out.println("Redis Cache调用put方法[key=" + key + ", value = " + value + "]");
         final String keyf = key.toString();
         final Object valuef = value;
 
@@ -140,7 +142,9 @@ public class RedisCache implements Cache {
 
     @Override
     public void evict(Object key) {
-        System.out.println("-------- RedisCache evict() ----------");
+        System.out.println("删除缓存中[key=" + key + "]元素");
+        final String keyf = key.toString();
+        redisTemplate.execute((RedisCallback<Long>) redisConnection -> redisConnection.del(keyf.getBytes()));
     }
 
     @Override
@@ -203,9 +207,13 @@ public class RedisCache implements Cache {
     }
 
 
+    public static final Long DAYS = 30L;
+    public static final Long haha = DAYS * 24 * 3600 * 1000;
     public static void main(String [] args){
-        int a = 1024;
-        byte [] one = String.valueOf(a).getBytes();
+            Long cur = System.currentTimeMillis();
+            System.out.println(cur);
+            Long ti = System.currentTimeMillis() - haha;
+            System.out.println("tmp = " + haha + ", ti = " + ti);
     }
 
 }

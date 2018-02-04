@@ -18,6 +18,24 @@
         WHERE pre_action = #{preAction}
     </select>
 
+    <update id="updateStrategy" parameterType="com.shangxuefeng.cachetest.business.bean.Strategy">
+        UPDATE strategy
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="preAction != null">
+                pre_action = #{preAction},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="id != null">
+                utime = UNIX_TIMESTAMP()*1000,
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
     <sql id="BaseColumnLists">
         id, name, pre_action as preAction, status, ctime, utime
     </sql>

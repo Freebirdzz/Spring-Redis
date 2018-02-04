@@ -17,4 +17,12 @@ public interface StrategyService {
      * @return
      */
     Strategy getThroughCacheById(int id);
+
+
+    /**
+     * 更新strategy信息，要点是需要清空缓存，防止访问到脏数据
+     * @param strategy
+     * @return
+     */
+    int updateStrategy(Strategy strategy);
 }

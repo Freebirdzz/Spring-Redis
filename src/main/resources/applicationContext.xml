@@ -12,6 +12,7 @@
                                 expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
+
     <context:component-scan base-package="com.shangxuefeng.cachetest.business.**"></context:component-scan>
 
 

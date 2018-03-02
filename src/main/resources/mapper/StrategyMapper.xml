@@ -36,6 +36,27 @@
         </set>
         WHERE id=#{id}
     </update>
+
+    <insert id="insertStrategy" parameterType="com.shangxuefeng.cachetest.business.bean.Strategy">
+            INSERT INTO strategy(
+            id,
+            name,
+            pre_action,
+            status,
+            ctime,
+            utime,
+            type
+            ) VALUES (
+            #{id},
+            #{name},
+            #{preAction},
+            #{status},
+            #{ctime},
+            #{utime},
+            #{type}
+            )
+    </insert>
+
     <sql id="BaseColumnLists">
         id, name, pre_action as preAction, status, ctime, utime
     </sql>

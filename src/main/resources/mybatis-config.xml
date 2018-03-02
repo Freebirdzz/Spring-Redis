@@ -4,4 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+    <!--配置一个处理enum类型到数据库中对应字段类型的转换器-->
+    <typeHandlers>
+        <typeHandler handler="com.shangxuefeng.cachetest.business.enums.EnumTypeHandler"
+                     javaType="com.shangxuefeng.cachetest.business.enums.StrategyEnum"/>
+    </typeHandlers>
+
 </configuration>

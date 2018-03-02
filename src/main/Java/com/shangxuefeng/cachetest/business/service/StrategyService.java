@@ -36,4 +36,6 @@ public interface StrategyService {
      */
     boolean updateStrategyTransactional(Strategy strategy, boolean needFail);
 
+
+    void insertStrategy(Strategy strategy);
 }

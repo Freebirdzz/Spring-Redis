@@ -84,4 +84,10 @@ public class StrategyServiceImpl implements StrategyService {
         }
         return ret == 0;
     }
+
+    @Override
+    public void insertStrategy(Strategy strategy) {
+        strategyDao.insertStrategy(strategy);
+    }
+
 }

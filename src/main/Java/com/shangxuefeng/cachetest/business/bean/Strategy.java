@@ -1,6 +1,7 @@
 package com.shangxuefeng.cachetest.business.bean;
 
 import com.google.common.base.MoreObjects;
+import com.shangxuefeng.cachetest.business.enums.StrategyEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,10 +20,10 @@ public class Strategy implements Serializable{
     private Integer status;
     private Long ctime;
     private Long utime;
-
+    private StrategyEnum type;
 
     @Override
     public String toString(){
-        return ("[id=" + id + ", name=" + name + ", preAction=" + preAction + ", status=" + status + "]");
+        return ("[id=" + id + ", name=" + name + ", preAction=" + preAction + ", status=" + status  + ", type=" + type.getDesc() + "]");
     }
 }

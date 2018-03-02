@@ -13,4 +13,6 @@ public interface StrategyDao {
 
     int updateStrategy(Strategy strategy);
 
+    void insertStrategy(Strategy strategy);
+
 }

@@ -2,6 +2,7 @@ package business.dao;
 
 import com.shangxuefeng.cachetest.business.bean.Strategy;
 import com.shangxuefeng.cachetest.business.dao.StrategyDao;
+import com.shangxuefeng.cachetest.business.enums.StrategyEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -41,5 +42,21 @@ public class StrategyDaoTest {
         list.forEach(System.out::println);
         System.out.println("-----查询不存在的结果集,listIsNull=" + Objects.isNull(list) + ", size=" + list.size() + "-----");
 
+    }
+
+
+    @Test
+    public void insertStrategyTest(){
+        Strategy stg = new Strategy();
+        stg.setName("测试策略1");
+        stg.setId(16);
+        stg.setStatus(2);
+        //枚举类型，直接插入数据库的int字段，会报错！需要通过一个BaseTypeHandler这个东西解决
+        stg.setType(StrategyEnum.FOUR);
+        stg.setCtime(1510297830000L);
+        stg.setUtime(1510297830000L);
+        stg.setPreAction("BUBBLING");
+        System.out.println(stg);
+        strategyDao.insertStrategy(stg);
     }
 }

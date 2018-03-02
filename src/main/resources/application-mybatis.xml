@@ -32,6 +32,13 @@
 
 
     <!--使用注解方式的事务-->
-    <tx:annotation-driven/>
+    <!--针对事物，注解使用相应的配置-->
+    <tx:annotation-driven />
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+
 </beans>
 

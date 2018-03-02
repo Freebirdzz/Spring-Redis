@@ -3,12 +3,15 @@ package com.shangxuefeng.cachetest.business.service.impl;
 import com.shangxuefeng.cachetest.business.dao.StrategyDao;
 import com.shangxuefeng.cachetest.business.service.StrategyService;
 import com.shangxuefeng.cachetest.business.bean.Strategy;
+import com.shangxuefeng.cachetest.commons.exception.MyException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author kevin
@@ -56,5 +59,29 @@ public class StrategyServiceImpl implements StrategyService {
         int ret = strategyDao.updateStrategy(strategy);
         System.out.println("更新了数据库中[" + strategy + "]的信息,ret=" + ret);
         return ret;
+    }
+
+
+    /**
+     * 模拟长时间事物
+     * @param strategy
+     * @param needFail 执行失败
+     * @return
+     */
+    @Transactional(rollbackFor = MyException.class)
+    public boolean updateStrategyTransactional(Strategy strategy, boolean needFail){
+        int ret = strategyDao.updateStrategy(strategy);
+/*        for (int i=1;i<=5;i++){
+            try {
+                Thread.sleep(1000);
+                System.out.println("查询线程睡眠" + i + "秒，模拟长时间任务");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }*/
+        if (needFail){
+            System.out.println("模拟事物执行失败");
+        }
+        return ret == 0;
     }
 }

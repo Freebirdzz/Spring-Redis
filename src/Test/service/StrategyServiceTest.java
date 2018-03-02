@@ -107,4 +107,11 @@ public class StrategyServiceTest {
         stg = strategyService.getThroughCacheById(id);
         System.out.println(stg);
     }
+
+    @Test
+    public void updateStrategyTransactional(){
+        Strategy strategy = strategyService.getStrategyById(1);
+        strategy.setName("测试事物处理-流程执行失败");
+        strategyService.updateStrategyTransactional(strategy, true);
+    }
 }

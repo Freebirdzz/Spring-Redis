@@ -59,4 +59,31 @@ public class StrategyDaoTest {
         System.out.println(stg);
         strategyDao.insertStrategy(stg);
     }
+
+    private String [] action = {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"};
+    @Test
+    public void batchInsert(){
+        int size = 500000;
+        for (int i=165023;i<=size;i++){
+            Strategy stg = new Strategy();
+            stg.setName("批量数据[" + i+ "]");
+            stg.setStatus(1);
+            stg.setId(i);
+            stg.setType(StrategyEnum.codeOf(i%4));
+            stg.setCtime(System.currentTimeMillis());
+            stg.setUtime(System.currentTimeMillis());
+            stg.setPreAction(action[i%8]);
+            System.out.println(i);
+            strategyDao.insertStrategy(stg);
+        }
+    }
+
+
+    @Test
+    public void tc(){
+        int a = 1;
+        int b = 34;
+        int c = a = b;
+        System.out.println(a+"  " + b + "  " + c);
+    }
 }

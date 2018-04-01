@@ -4,7 +4,7 @@ package com.shangxuefeng.cachetest.business.enums;
  * @author kevin
  */
 
-public enum StrategyEnum {
+public enum StrategyEnum implements BaseEnum{
     ONE(0, "默认策略"),
     TWO(1, "主页访问"),
     THREE(2, "策略三"),
@@ -17,6 +17,7 @@ public enum StrategyEnum {
         this.desc = desc;
     }
 
+    @Override
     public int getCode(){
         return code;
     }
